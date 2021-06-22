@@ -1,0 +1,276 @@
+---
+openapi: 3.0.1
+info:
+  title: Portal Backend API
+  description: Portal Backend REST API
+  contact:
+    name: 'Monet+, a.s.'
+    url: 'http://www.monetplus.cz'
+    email: zdrlik@monetplus.cz
+  version: v1
+paths:
+  /api/portal/mobile/v1/state:
+    get:
+      tags:
+        - Portal
+      summary: Get ProID mobile state for user
+      responses:
+        '200':
+          description: ProID mobile state for user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MobileStateResponse'
+
+  /api/portal/mobile/v1/activate:
+    post:
+      tags:
+        - Portal
+      summary: Activate ProID mobile if state is initial
+        or inactive(fixing missing parts).
+      responses:
+        '200':
+          description: ProID mobile was activated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MobileActivateResponse'
+
+  /api/portal/mobile/v1/activationCode:
+    get:
+      tags:
+        - Portal
+      summary: Get QR code for ProID mobile application activation.
+      responses:
+        '200':
+          description: QR code data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MobileActivationCodeResponse'
+
+  /api/portal/mobile/v1/instances:
+    get:
+      tags:
+        - Portal
+      summary: Get current ProID mobile application instances
+      responses:
+        '200':
+          description: List of current ProID mobile application instances
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MobileInstancesResponse'
+
+  /api/portal/mobile/v1/instance/{instanceId}:
+    delete:
+      tags:
+        - Portal
+      summary: Delete ProID mobile instance
+      parameters:
+        - in: path
+          name: instanceId
+          description: Instance Id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ProID mobile instance was successfully removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MobileDeleteInstanceResponse'
+
+  /api/portal/mobile/v1/instance/{instanceId}/rename:
+    put:
+      tags:
+        - Portal
+      summary: Rename ProID mobile instance
+      parameters:
+        - in: path
+          name: instanceId
+          description: Instance Id
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        description: New name
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                instanceName:
+                  type: string
+
+      responses:
+        '200':
+          description: ProID mobile instance with new instance name
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MobileInstanceResponse'
+
+security:
+  - accessTokenAuth: []
+
+components:
+  securitySchemes:
+    accessTokenAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Access Token
+
+  schemas:
+    ResponseStatus:
+      enum:
+        - success
+        - error
+      type: string
+
+    MethodState:
+      enum:
+        - ACTIVE
+        - BLOCKED_MAN
+        - BLOCKED_USAGE_TEMP
+        - BLOCKED_USAGE_PERM
+        - DEACTIVATED
+      type: string
+
+    State:
+      enum:
+        - INITIAL
+        - ACTIVE
+        - INACTIVE
+      type: string
+
+    instanceOS:
+      enum:
+        - IOS
+        - ANDROID
+      type: string
+
+    MobileStateResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatus'
+        code:
+          type: integer
+          format: int32
+          nullable: true
+        data:
+          type: object
+          properties:
+            state:
+              $ref: '#/components/schemas/State'
+      additionalProperties: false
+
+    MobileActivateResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatus'
+        code:
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+
+    MobileActivationCodeResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatus'
+        code:
+          type: integer
+          format: int32
+          nullable: true
+        data:
+          $ref: '#/components/schemas/MobileActivationCodeResponseData'
+      additionalProperties: false
+
+    MobileActivationCodeResponseData:
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        userId:
+          type: string
+          nullable: true
+        qrData:
+          type: string
+          nullable: true
+      additionalProperties: false
+
+    MobileInstancesResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatus'
+        code:
+          type: integer
+          format: int32
+          nullable: true
+        data:
+          $ref: '#/components/schemas/MobileInstancesResponseData'
+      additionalProperties: false
+
+    MobileInstancesResponseData:
+      type: object
+      properties:
+        instances:
+          type: array
+          items:
+            $ref: '#/components/schemas/MobileInstanceResponseData'
+          nullable: true
+      additionalProperties: false
+
+    MobileDeleteInstanceResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatus'
+        code:
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+
+    MobileInstanceResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatus'
+        code:
+          type: integer
+          format: int32
+          nullable: true
+        data:
+          $ref: '#/components/schemas/MobileInstanceResponseData'
+      additionalProperties: false
+
+    MobileInstanceResponseData:
+      type: object
+      properties:
+        instanceId:
+          type: string
+        state:
+          $ref: '#/components/schemas/MethodState'
+        instanceName:
+          type: string
+        lastAccess:
+          type: string
+          format: date-time
+        osVersion:
+          type: string
+        deviceModel:
+          type: string
+        manufacturer:
+          type: string
+        platform:
+          $ref: '#/components/schemas/instanceOS'
