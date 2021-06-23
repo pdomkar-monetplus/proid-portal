@@ -1,8 +1,7 @@
----
 openapi: 3.0.1
 info:
-  title: Portal Backend API
-  description: Portal Backend REST API
+  title: Mobile
+  description: Portal Backend REST API for mobile module
   contact:
     name: 'Monet+, a.s.'
     url: 'http://www.monetplus.cz'
@@ -21,13 +20,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MobileStateResponse'
-
   /api/portal/mobile/v1/activate:
     post:
       tags:
         - Portal
-      summary: Activate ProID mobile if state is initial
-        or inactive(fixing missing parts).
+      summary: Activate ProID mobile if state is initial or inactive(fixing missing parts).
       responses:
         '200':
           description: ProID mobile was activated successfully
@@ -35,7 +32,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MobileActivateResponse'
-
   /api/portal/mobile/v1/activationCode:
     get:
       tags:
@@ -48,7 +44,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MobileActivationCodeResponse'
-
   /api/portal/mobile/v1/instances:
     get:
       tags:
@@ -61,8 +56,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MobileInstancesResponse'
-
-  /api/portal/mobile/v1/instance/{instanceId}:
+              examples:
+                example-1:
+                  value:
+                    status: success
+                    code: 0
+                    data:
+                      instances:
+                        - instanceId: string
+                          state: ACTIVE
+                          instanceName: string
+                          lastAccess: '2019-08-24T14:15:22Z'
+                          osVersion: string
+                          deviceModel: string
+                          manufacturer: string
+                          platform: IOS
+  '/api/portal/mobile/v1/instance/{instanceId}':
     delete:
       tags:
         - Portal
@@ -81,8 +90,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MobileDeleteInstanceResponse'
-
-  /api/portal/mobile/v1/instance/{instanceId}/rename:
+  '/api/portal/mobile/v1/instance/{instanceId}/rename':
     put:
       tags:
         - Portal
@@ -94,7 +102,6 @@ paths:
           required: true
           schema:
             type: string
-
       requestBody:
         description: New name
         required: true
@@ -105,7 +112,6 @@ paths:
               properties:
                 instanceName:
                   type: string
-
       responses:
         '200':
           description: ProID mobile instance with new instance name
@@ -113,24 +119,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MobileInstanceResponse'
-
 security:
   - accessTokenAuth: []
-
 components:
   securitySchemes:
     accessTokenAuth:
       type: http
       scheme: bearer
       bearerFormat: Access Token
-
   schemas:
     ResponseStatus:
       enum:
         - success
         - error
       type: string
-
     MethodState:
       enum:
         - ACTIVE
@@ -139,20 +141,17 @@ components:
         - BLOCKED_USAGE_PERM
         - DEACTIVATED
       type: string
-
     State:
       enum:
         - INITIAL
         - ACTIVE
         - INACTIVE
       type: string
-
     instanceOS:
       enum:
         - IOS
         - ANDROID
       type: string
-
     MobileStateResponse:
       type: object
       properties:
@@ -168,7 +167,6 @@ components:
             state:
               $ref: '#/components/schemas/State'
       additionalProperties: false
-
     MobileActivateResponse:
       type: object
       properties:
@@ -179,7 +177,6 @@ components:
           format: int32
           nullable: true
       additionalProperties: false
-
     MobileActivationCodeResponse:
       type: object
       properties:
@@ -192,7 +189,6 @@ components:
         data:
           $ref: '#/components/schemas/MobileActivationCodeResponseData'
       additionalProperties: false
-
     MobileActivationCodeResponseData:
       type: object
       properties:
@@ -206,7 +202,6 @@ components:
           type: string
           nullable: true
       additionalProperties: false
-
     MobileInstancesResponse:
       type: object
       properties:
@@ -219,7 +214,21 @@ components:
         data:
           $ref: '#/components/schemas/MobileInstancesResponseData'
       additionalProperties: false
-
+      x-examples:
+        example-1:
+          value:
+            status: success
+            code: -2147483648
+            data:
+              instances:
+                - instanceId: string
+                  state: ACTIVE
+                  instanceName: string
+                  lastAccess: '2019-08-24T14:15:22Z'
+                  osVersion: string
+                  deviceModel: string
+                  manufacturer: string
+                  platform: IOS
     MobileInstancesResponseData:
       type: object
       properties:
@@ -229,7 +238,6 @@ components:
             $ref: '#/components/schemas/MobileInstanceResponseData'
           nullable: true
       additionalProperties: false
-
     MobileDeleteInstanceResponse:
       type: object
       properties:
@@ -240,7 +248,6 @@ components:
           format: int32
           nullable: true
       additionalProperties: false
-
     MobileInstanceResponse:
       type: object
       properties:
@@ -253,7 +260,6 @@ components:
         data:
           $ref: '#/components/schemas/MobileInstanceResponseData'
       additionalProperties: false
-
     MobileInstanceResponseData:
       type: object
       properties:
