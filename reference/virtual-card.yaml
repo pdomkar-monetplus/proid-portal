@@ -28,6 +28,55 @@ paths:
                       - $ref: '#/components/schemas/VirtualCardInfoResponse'
                       - type: 'null'
                         properties: {}
+  /api/portal/virtualCard/v1/create:
+    post:
+      summary: Create virtual card
+      operationId: post-api-portal-virtualCard-v1-create
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateVirtualCardRespone'
+  /api/portal/virtualCard/v1/templates:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: ./mobile.yaml#/components/schemas/ResponseStatus
+                  code:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/TemplateResponse'
+      operationId: get-api-portal-virtualCard-v1-template
+    parameters: []
+  '/api/portal/virtualCard/v1/certificate/{certificateId}':
+    delete:
+      summary: ''
+      operationId: delete-api-portal-virtualCard-v1-certificate
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCertificateResponse'
+      parameters: []
+    parameters:
+      - schema:
+          type: string
+        name: certificateId
+        in: path
+        required: true
 components:
   schemas:
     VirtualCardInfoResponse:
@@ -55,17 +104,24 @@ components:
       required:
         - cardNumber
         - created
+        - certificates
     Certificate:
       title: Certificate
       type: object
       properties:
         serialNumber:
           type: string
+        notBefore:
+          type: string
+          description: ISO 8601 formát?
+        notAfter:
+          type: string
+          description: ISO 8601 formát?
         autoExtend:
           type: boolean
-        validity:
+        tempateIdentificator?:
           type: string
-        purpose:
+        purpose - copy:
           type: string
         publisher:
           type: string
@@ -73,11 +129,54 @@ components:
           type: string
         state:
           type: string
+          enum:
+            - VALID
         alternativeName:
           type: string
-        print:
+        signature:
           type: string
         purposes:
           type: array
           items:
             type: string
+    TemplateResponse:
+      title: TemplateResponse
+      type: object
+      properties:
+        identificator?:
+          type: string
+        name:
+          type: string
+        icon:
+          type: string
+        multiple:
+          type:
+            - string
+            - boolean
+          description: |
+            Support more then one certificate of this purpose
+      required:
+        - identificator?
+        - name
+        - icon
+        - multiple
+    DeleteCertificateResponse:
+      title: DeleteCertificateResponse
+      type: object
+      properties:
+        status:
+          $ref: ./mobile.yaml#/components/schemas/ResponseStatus
+        code:
+          type:
+            - integer
+            - 'null'
+    CreateVirtualCardRespone:
+      title: CreateVirtualCardRespones
+      type: object
+      properties:
+        status:
+          $ref: ./mobile.yaml#/components/schemas/ResponseStatus
+        code:
+          type:
+            - integer
+            - 'null'
