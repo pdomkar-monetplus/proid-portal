@@ -6,10 +6,10 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  /api/portal/virtualCard/v1/info:
+  /api/portal/virtualCard/v1/card:
     parameters: []
     get:
-      summary: ''
+      summary: Virtual card info
       operationId: get-api-portal-virtualCard-v1-info
       responses:
         '200':
@@ -28,6 +28,27 @@ paths:
                       - $ref: '#/components/schemas/VirtualCardInfoResponse'
                       - type: 'null'
                         properties: {}
+    delete:
+      summary: Delete virtual card
+      operationId: delete-api-portal-virtualCard-v1-card
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteVirtualCardResponse'
+      deprecated: true
+    post:
+      summary: Create virtual card
+      operationId: post-api-portal-virtualCard-v1-card
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateVirtualCardRespone'
   /api/portal/virtualCard/v1/create:
     post:
       summary: Create virtual card
@@ -39,9 +60,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateVirtualCardRespone'
-  /api/portal/virtualCard/v1/templates:
+      deprecated: true
+      x-internal: false
+  '/api/portal/virtualCard/v1/card/{cardNumber}':
+    parameters:
+      - schema:
+          type: string
+        name: cardNumber
+        in: path
+        required: true
+    delete:
+      summary: Delete virtual card
+      operationId: delete-api-portal-virtualCard-v1-card-cardNumber
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteVirtualCardResponse'
+  '/api/portal/virtualCard/v1/card/{cardNumber}/templates':
     get:
-      summary: Your GET endpoint
+      summary: Templates
       tags: []
       responses:
         '200':
@@ -58,10 +98,37 @@ paths:
                   data:
                     $ref: '#/components/schemas/TemplateResponse'
       operationId: get-api-portal-virtualCard-v1-template
-    parameters: []
-  '/api/portal/virtualCard/v1/certificate/{certificateId}':
+    parameters:
+      - schema:
+          type: string
+        name: cardNumber
+        in: path
+        required: true
+  '/api/portal/virtualCard/v1/card/{cardNumber}/templates/{templateIdentificator}/generate':
+    post:
+      summary: Generate certificate by template
+      operationId: post-api-portal-virtualCard-v1-certificate
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCertificateResponse'
+    parameters:
+      - schema:
+          type: string
+        name: cardNumber
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: templateIdentificator
+        in: path
+        required: true
+  '/api/portal/virtualCard/v1/card/{cardNumber}/certificate/{certificateId}':
     delete:
-      summary: ''
+      summary: Delete certificate
       operationId: delete-api-portal-virtualCard-v1-certificate
       responses:
         '200':
@@ -77,20 +144,18 @@ paths:
         name: certificateId
         in: path
         required: true
+      - schema:
+          type: string
+        name: cardNumber
+        in: path
+        required: true
 components:
   schemas:
     VirtualCardInfoResponse:
       title: VirtualCardInfoResponse
       type: object
       description: ''
-      examples:
-        - id: 142
-          firstName: Alice
-          lastName: Smith
-          email: alice.smith@gmail.com
-          dateOfBirth: '1997-10-31'
-          emailVerified: true
-          signUpDate: '2019-08-24'
+      examples: []
       properties:
         cardNumber:
           type: string
@@ -120,17 +185,17 @@ components:
         autoExtend:
           type: boolean
         tempateIdentificator?:
-          type: string
-        purpose - copy:
-          type: string
-        publisher:
-          type: string
-        receiver:
-          type: string
+          type:
+            - string
+            - 'null'
         state:
           type: string
           enum:
             - VALID
+        publisher:
+          type: string
+        receiver:
+          type: string
         alternativeName:
           type: string
         signature:
@@ -139,6 +204,12 @@ components:
           type: array
           items:
             type: string
+      required:
+        - serialNumber
+        - notBefore
+        - notAfter
+        - autoExtend
+        - state
     TemplateResponse:
       title: TemplateResponse
       type: object
@@ -150,15 +221,12 @@ components:
         icon:
           type: string
         multiple:
-          type:
-            - string
-            - boolean
+          type: boolean
           description: |
-            Support more then one certificate of this purpose
+            Support more then one certificate of this purpose or should be number - how many can be?
       required:
         - identificator?
         - name
-        - icon
         - multiple
     DeleteCertificateResponse:
       title: DeleteCertificateResponse
@@ -172,6 +240,26 @@ components:
             - 'null'
     CreateVirtualCardRespone:
       title: CreateVirtualCardRespones
+      type: object
+      properties:
+        status:
+          $ref: ./mobile.yaml#/components/schemas/ResponseStatus
+        code:
+          type:
+            - integer
+            - 'null'
+    CreateCertificateResponse:
+      title: CreateCertificateResponse
+      type: object
+      properties:
+        status:
+          $ref: ./mobile.yaml#/components/schemas/ResponseStatus
+        code:
+          type:
+            - integer
+            - 'null'
+    DeleteVirtualCardResponse:
+      title: DeleteVirtualCardResponse
       type: object
       properties:
         status:
