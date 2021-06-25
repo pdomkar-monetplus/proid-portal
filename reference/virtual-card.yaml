@@ -38,7 +38,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeleteVirtualCardResponse'
-      deprecated: true
     post:
       summary: Create virtual card
       operationId: post-api-portal-virtualCard-v1-card
@@ -49,37 +48,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateVirtualCardRespone'
-  /api/portal/virtualCard/v1/create:
-    post:
-      summary: Create virtual card
-      operationId: post-api-portal-virtualCard-v1-create
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateVirtualCardRespone'
-      deprecated: true
-      x-internal: false
-  '/api/portal/virtualCard/v1/card/{cardNumber}':
-    parameters:
-      - schema:
-          type: string
-        name: cardNumber
-        in: path
-        required: true
-    delete:
-      summary: Delete virtual card
-      operationId: delete-api-portal-virtualCard-v1-card-cardNumber
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeleteVirtualCardResponse'
-  '/api/portal/virtualCard/v1/card/{cardNumber}/templates':
+  /api/portal/virtualCard/v1/certificateTemplates:
     get:
       summary: Templates
       tags: []
@@ -98,16 +67,12 @@ paths:
                   data:
                     $ref: '#/components/schemas/TemplateResponse'
       operationId: get-api-portal-virtualCard-v1-template
-    parameters:
-      - schema:
-          type: string
-        name: cardNumber
-        in: path
-        required: true
-  '/api/portal/virtualCard/v1/card/{cardNumber}/templates/{templateId}/generate':
+    parameters: []
+  /api/portal/virtualCard/v1/card/certificates:
+    parameters: []
     post:
-      summary: Generate certificate by template
-      operationId: post-api-portal-virtualCard-v1-certificate
+      summary: ''
+      operationId: post-api-portal-virtualCard-v1-card-cardNumber-certificate
       responses:
         '200':
           description: OK
@@ -115,18 +80,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateCertificateResponse'
-    parameters:
-      - schema:
-          type: string
-        name: cardNumber
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: templateId
-        in: path
-        required: true
-  '/api/portal/virtualCard/v1/card/{cardNumber}/certificate/{certificateId}':
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                templateId:
+                  type: integer
+    put:
+      summary: ''
+      operationId: put-api-portal-virtualCard-v1-card-certificate
+      responses:
+        '200':
+          description: OK
+  '/api/portal/virtualCard/v1/card/certificates/{certificateId}':
     delete:
       summary: Delete certificate
       operationId: delete-api-portal-virtualCard-v1-certificate
@@ -144,11 +112,6 @@ paths:
         name: certificateId
         in: path
         required: true
-      - schema:
-          type: string
-        name: cardNumber
-        in: path
-        required: true
 components:
   schemas:
     VirtualCardInfoResponse:
@@ -157,58 +120,67 @@ components:
       description: ''
       examples: []
       properties:
-        cardNumber:
+        serialNumber:
           type: string
           description: Unique identifier for the given user.
-        created:
+        validFrom:
+          type: string
+        validTo:
           type: string
         certificates:
           type: array
           items:
             $ref: '#/components/schemas/Certificate'
       required:
-        - cardNumber
-        - created
+        - serialNumber
+        - validFrom
+        - validTo
         - certificates
     Certificate:
       title: Certificate
       type: object
       properties:
+        certificateId:
+          type: integer
         serialNumber:
           type: string
         templateId?:
           type:
-            - string
             - 'null'
+            - integer
         notBefore:
           type: string
           description: ISO 8601 formát?
         notAfter:
           type: string
           description: ISO 8601 formát?
-        autoExtend:
-          type: boolean
         state:
           type: string
           enum:
-            - VALID
-        publisher:
+            - valid
+            - invalid
+        issuer:
           type: string
-        receiver:
+        subject:
           type: string
-        alternativeName:
-          type: string
-        signature:
-          type: string
-        purposes:
+        keyUsage:
           type: array
           items:
             type: string
+        alternativeNames:
+          type: array
+          items:
+            type: string
+        hash:
+          type: string
+        rawData:
+          type: string
+          description: Pole bytu pro export certifikátu
       required:
+        - certificateId
         - serialNumber
         - notBefore
         - notAfter
-        - autoExtend
         - state
     TemplateResponse:
       title: TemplateResponse
@@ -220,14 +192,16 @@ components:
           type: string
         icon:
           type: string
-        multiple:
+        autorenew:
+          type: boolean
+          description: auto obnova
+        autoenroll:
           type: boolean
           description: |
-            Support more then one certificate of this purpose or should be number - how many can be?
+            Vygenerovat se zalozením karty
       required:
         - templateId
         - name
-        - multiple
     DeleteCertificateResponse:
       title: DeleteCertificateResponse
       type: object
