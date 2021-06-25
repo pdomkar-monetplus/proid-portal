@@ -29,7 +29,6 @@ paths:
                       card:
                         oneOf:
                           - type: 'null'
-                            properties: {}
                           - $ref: '#/components/schemas/VirtualCardInfoResponse'
     delete:
       summary: Delete virtual card
@@ -191,9 +190,16 @@ components:
       required:
         - certificateId
         - serialNumber
+        - templateId?
         - notBefore
         - notAfter
         - state
+        - issuer
+        - subject
+        - keyUsage
+        - alternativeNames
+        - hash
+        - rawData
     TemplateResponse:
       title: TemplateResponse
       type: object
@@ -214,6 +220,9 @@ components:
       required:
         - templateId
         - name
+        - icon
+        - autorenew
+        - autoenroll
     DeleteCertificateResponse:
       title: DeleteCertificateResponse
       type: object
