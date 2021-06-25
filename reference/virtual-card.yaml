@@ -104,7 +104,7 @@ paths:
         name: cardNumber
         in: path
         required: true
-  '/api/portal/virtualCard/v1/card/{cardNumber}/templates/{templateIdentificator}/generate':
+  '/api/portal/virtualCard/v1/card/{cardNumber}/templates/{templateId}/generate':
     post:
       summary: Generate certificate by template
       operationId: post-api-portal-virtualCard-v1-certificate
@@ -123,7 +123,7 @@ paths:
         required: true
       - schema:
           type: string
-        name: templateIdentificator
+        name: templateId
         in: path
         required: true
   '/api/portal/virtualCard/v1/card/{cardNumber}/certificate/{certificateId}':
@@ -176,6 +176,10 @@ components:
       properties:
         serialNumber:
           type: string
+        templateId?:
+          type:
+            - string
+            - 'null'
         notBefore:
           type: string
           description: ISO 8601 formát?
@@ -184,10 +188,6 @@ components:
           description: ISO 8601 formát?
         autoExtend:
           type: boolean
-        tempateIdentificator?:
-          type:
-            - string
-            - 'null'
         state:
           type: string
           enum:
@@ -214,7 +214,7 @@ components:
       title: TemplateResponse
       type: object
       properties:
-        identificator?:
+        templateId:
           type: string
         name:
           type: string
@@ -225,7 +225,7 @@ components:
           description: |
             Support more then one certificate of this purpose or should be number - how many can be?
       required:
-        - identificator?
+        - templateId
         - name
         - multiple
     DeleteCertificateResponse:
