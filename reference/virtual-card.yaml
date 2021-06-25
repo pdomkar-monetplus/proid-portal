@@ -24,10 +24,13 @@ paths:
                   code:
                     type: string
                   data:
-                    oneOf:
-                      - $ref: '#/components/schemas/VirtualCardInfoResponse'
-                      - type: 'null'
-                        properties: {}
+                    type: object
+                    properties:
+                      card:
+                        oneOf:
+                          - type: 'null'
+                            properties: {}
+                          - $ref: '#/components/schemas/VirtualCardInfoResponse'
     delete:
       summary: Delete virtual card
       operationId: delete-api-portal-virtualCard-v1-card
@@ -50,7 +53,7 @@ paths:
                 $ref: '#/components/schemas/CreateVirtualCardRespone'
   /api/portal/virtualCard/v1/certificateTemplates:
     get:
-      summary: Templates
+      summary: Templates for certificates
       tags: []
       responses:
         '200':
@@ -68,10 +71,10 @@ paths:
                     $ref: '#/components/schemas/TemplateResponse'
       operationId: get-api-portal-virtualCard-v1-template
     parameters: []
-  /api/portal/virtualCard/v1/card/certificates:
+  /api/portal/virtualCard/v1/card/certificates/generate:
     parameters: []
     post:
-      summary: ''
+      summary: Generate certificate by template
       operationId: post-api-portal-virtualCard-v1-card-cardNumber-certificate
       responses:
         '200':
@@ -88,12 +91,21 @@ paths:
               properties:
                 templateId:
                   type: integer
-    put:
-      summary: ''
-      operationId: put-api-portal-virtualCard-v1-card-certificate
+  /api/portal/virtualCard/v1/card/certificates/import:
+    post:
+      summary: Import certificate
+      operationId: post-api-portal-virtualCard-v1-card-certificates-import
       responses:
         '200':
           description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rawData:
+                  type: string
   '/api/portal/virtualCard/v1/card/certificates/{certificateId}':
     delete:
       summary: Delete certificate
