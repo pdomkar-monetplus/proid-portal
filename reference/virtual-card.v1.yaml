@@ -19,7 +19,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: Virtual cards
       tags: []
       responses:
         '200':
@@ -46,7 +46,7 @@ paths:
       operationId: get-api-portal-virtualCard-v1-tenants-tenant-users-upn-cards
       description: '{tenant} is value of tenantName from accountPermissions and {upn} is value of userPrincipalName from accountPermissions'
     post:
-      summary: ''
+      summary: Create virtual card
       operationId: post-api-portal-virtualCard-v1-tenants-tenant-users-upn-cards
       responses:
         '200':
@@ -80,7 +80,7 @@ paths:
         in: path
         required: true
     delete:
-      summary: ''
+      summary: Delete virtual card
       operationId: delete-api-portal-virtualCard-v1-tenants-tenant-users-upn-cards-cardId
       responses:
         '200':
@@ -96,96 +96,6 @@ paths:
                         type: object
                     required:
                       - data
-  /api/portal/virtualCard/v1/card:
-    parameters: []
-    get:
-      summary: Virtual card info
-      operationId: get-api-portal-virtualCard-v1-info
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: ../models/jsend/successResponse.v1.yaml
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        required:
-                          - card
-                        properties:
-                          card:
-                            oneOf:
-                              - $ref: '#/components/schemas/VirtualCardInfo'
-                              - type: 'null'
-                    required:
-                      - data
-      deprecated: true
-    delete:
-      summary: Delete virtual card
-      operationId: delete-api-portal-virtualCard-v1-card
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: ../models/jsend/successResponse.v1.yaml
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                    required:
-                      - data
-      deprecated: true
-    post:
-      summary: Create virtual card
-      operationId: post-api-portal-virtualCard-v1-card
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: ../models/jsend/successResponse.v1.yaml
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                    required:
-                      - data
-      deprecated: true
-  /api/portal/virtualCard/v1/certificateTemplates:
-    get:
-      summary: Templates for certificates
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: ../models/jsend/successResponse.v1.yaml
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        required:
-                          - templates
-                        properties:
-                          templates:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/Template'
-                    required:
-                      - data
-      operationId: get-api-portal-virtualCard-v1-template
-    parameters: []
   /api/portal/virtualCard/v1/card/certificates/generate:
     parameters: []
     post:
