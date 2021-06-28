@@ -96,6 +96,33 @@ paths:
                         type: object
                     required:
                       - data
+  /api/portal/virtualCard/v1/certificateTemplates:
+    get:
+      summary: Templates for certificates
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ../models/jsend/successResponse.v1.yaml
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        required:
+                          - templates
+                        properties:
+                          templates:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Template'
+                    required:
+                      - data
+      operationId: get-api-portal-virtualCard-v1-template
+    parameters: []
   /api/portal/virtualCard/v1/card/certificates/generate:
     parameters: []
     post:
