@@ -1,0 +1,8 @@
+type: string
+title: JSend Status
+description: JSend `status` field representing the general result character.
+enum:
+  - success
+  - lemon
+  - fail
+  - error

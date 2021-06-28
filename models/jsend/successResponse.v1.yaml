@@ -1,0 +1,16 @@
+allOf:
+  - $ref: ./response.v1.yaml
+  - type: object
+    description: JSend Success response scheme.
+    properties:
+      status:
+        type: string
+        enum:
+          - success
+      data:
+        type: object
+    required:
+      - status
+      - data
+description: Models a successful execution of the request.
+title: JSend Success Response

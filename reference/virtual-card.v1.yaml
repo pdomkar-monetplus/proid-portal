@@ -17,19 +17,21 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: ./mobile.yaml#/components/schemas/ResponseStatus
-                  code:
-                    type: string
-                  data:
-                    type: object
+                allOf:
+                  - $ref: ../models/jsend/successResponse.v1.yaml
+                  - type: object
                     properties:
-                      card:
-                        oneOf:
-                          - type: 'null'
-                          - $ref: '#/components/schemas/VirtualCardInfoResponse'
+                      data:
+                        type: object
+                        required:
+                          - card
+                        properties:
+                          card:
+                            oneOf:
+                              - $ref: '#/components/schemas/VirtualCardInfo'
+                              - type: 'null'
+                    required:
+                      - data
     delete:
       summary: Delete virtual card
       operationId: delete-api-portal-virtualCard-v1-card
@@ -39,7 +41,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteVirtualCardResponse'
+                allOf:
+                  - $ref: ../models/jsend/successResponse.v1.yaml
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                    required:
+                      - data
     post:
       summary: Create virtual card
       operationId: post-api-portal-virtualCard-v1-card
@@ -49,7 +58,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateVirtualCardRespone'
+                allOf:
+                  - $ref: ../models/jsend/successResponse.v1.yaml
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                    required:
+                      - data
   /api/portal/virtualCard/v1/certificateTemplates:
     get:
       summary: Templates for certificates
@@ -60,14 +76,21 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: ./mobile.yaml#/components/schemas/ResponseStatus
-                  code:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/TemplateResponse'
+                allOf:
+                  - $ref: ../models/jsend/successResponse.v1.yaml
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        required:
+                          - templates
+                        properties:
+                          templates:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Template'
+                    required:
+                      - data
       operationId: get-api-portal-virtualCard-v1-template
     parameters: []
   /api/portal/virtualCard/v1/card/certificates/generate:
@@ -81,7 +104,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateCertificateResponse'
+                allOf:
+                  - $ref: ../models/jsend/successResponse.v1.yaml
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                    required:
+                      - data
       requestBody:
         content:
           application/json:
@@ -97,6 +127,17 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ../models/jsend/successResponse.v1.yaml
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                    required:
+                      - data
       requestBody:
         content:
           application/json:
@@ -115,7 +156,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteCertificateResponse'
+                allOf:
+                  - $ref: ../models/jsend/successResponse.v1.yaml
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                    required:
+                      - data
       parameters: []
     parameters:
       - schema:
@@ -125,8 +173,8 @@ paths:
         required: true
 components:
   schemas:
-    VirtualCardInfoResponse:
-      title: VirtualCardInfoResponse
+    VirtualCardInfo:
+      title: VirtualCardInfo
       type: object
       description: ''
       examples: []
@@ -200,7 +248,7 @@ components:
         - alternativeNames
         - hash
         - rawData
-    TemplateResponse:
+    Template:
       title: TemplateResponse
       type: object
       properties:
@@ -223,43 +271,3 @@ components:
         - icon
         - autorenew
         - autoenroll
-    DeleteCertificateResponse:
-      title: DeleteCertificateResponse
-      type: object
-      properties:
-        status:
-          $ref: ./mobile.yaml#/components/schemas/ResponseStatus
-        code:
-          type:
-            - integer
-            - 'null'
-    CreateVirtualCardRespone:
-      title: CreateVirtualCardRespones
-      type: object
-      properties:
-        status:
-          $ref: ./mobile.yaml#/components/schemas/ResponseStatus
-        code:
-          type:
-            - integer
-            - 'null'
-    CreateCertificateResponse:
-      title: CreateCertificateResponse
-      type: object
-      properties:
-        status:
-          $ref: ./mobile.yaml#/components/schemas/ResponseStatus
-        code:
-          type:
-            - integer
-            - 'null'
-    DeleteVirtualCardResponse:
-      title: DeleteVirtualCardResponse
-      type: object
-      properties:
-        status:
-          $ref: ./mobile.yaml#/components/schemas/ResponseStatus
-        code:
-          type:
-            - integer
-            - 'null'

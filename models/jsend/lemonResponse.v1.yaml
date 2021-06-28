@@ -1,0 +1,21 @@
+allOf:
+  - $ref: ./response.v1.yaml
+  - type: object
+    description: JSend Lemon response scheme
+    properties:
+      status:
+        type: string
+        enum:
+          - lemon
+      data:
+        type: object
+        required:
+          - error
+        properties:
+          error:
+            $ref: ./errorObject.v1.yaml
+    required:
+      - status
+      - data
+description: 'Models a technically successful execution of the request which, however, produced a business error during its processing.'
+title: JSend Lemon Response

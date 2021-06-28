@@ -1,0 +1,23 @@
+title: Error Object
+type: object
+description: Model providing metainformation about the error cause and its identification in terms of correlation identifiers.
+properties:
+  errorInstanceId:
+    type: string
+    description: 'Error instance, typically in a form of some random guid.'
+  category:
+    type: string
+    description: 'Error category dependant on the component of origin, or on a respective Case Validations translation.'
+  code:
+    type: number
+    description: 'Error code dependant on the component of origin, or on a respective Case Validations translation.'
+  errorSpecific:
+    type: object
+    description: Arbitrary data specific to the respective error instance.
+  message:
+    type: string
+    description: Optional textual description of the error cause or effects.
+required:
+  - errorInstanceId
+  - category
+  - code

@@ -1,0 +1,12 @@
+title: JSend Response
+type: object
+description: 'General object for a JSend based response. The contents (almost) strictly follow the specification, with an exception of extra `lemon` status and lack of `message` for `error`.'
+properties:
+  status:
+    $ref: ./status.v1.yaml
+  data:
+    type: object
+    description: Response payload.
+required:
+  - status
+  - data

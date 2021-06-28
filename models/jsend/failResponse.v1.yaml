@@ -1,0 +1,21 @@
+allOf:
+  - $ref: ./response.v1.yaml
+  - type: object
+    description: JSend fail response scheme.
+    properties:
+      status:
+        type: string
+        enum:
+          - fail
+      data:
+        type: object
+        required:
+          - error
+        properties:
+          error:
+            $ref: ./errorObject.v1.yaml
+    required:
+      - status
+      - data
+description: 'Models an unsuccesful execution of the request due to client side error; typically, request schema is invalid, the requested resource does not exist, etc.'
+title: JSend Fail Response

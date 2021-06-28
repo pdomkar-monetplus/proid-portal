@@ -1,0 +1,21 @@
+allOf:
+  - $ref: ./response.v1.yaml
+  - type: object
+    description: JSend error response scheme.
+    properties:
+      status:
+        type: string
+        enum:
+          - error
+      data:
+        type: object
+        required:
+          - error
+        properties:
+          error:
+            $ref: ./errorObject.v1.yaml
+    required:
+      - status
+      - data
+description: 'Models an unsuccessful execution of the request due to server side error; typically, database connection was lost, infrastructure failed, etc.'
+title: JSend Error Response
