@@ -162,6 +162,8 @@ paths:
             schema:
               type: object
               properties:
+                password:
+                  type: string
                 rawData:
                   type: string
     parameters:
