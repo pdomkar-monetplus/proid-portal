@@ -282,7 +282,7 @@ components:
         templateId?:
           type:
             - 'null'
-            - integer
+            - string
         notBefore:
           type: string
           description: ISO 8601 formát?
