@@ -137,7 +137,7 @@ paths:
               type: object
               properties:
                 templateId:
-                  type: integer
+                  type: string
   '/api/portal/virtualCard/v1/tenants/{tenant}/users/{upn}/cards/{cardId}/certificates/import':
     post:
       summary: Import certificate
@@ -276,7 +276,7 @@ components:
       type: object
       properties:
         certificateId:
-          type: integer
+          type: string
         serialNumber:
           type: string
         templateId?:
