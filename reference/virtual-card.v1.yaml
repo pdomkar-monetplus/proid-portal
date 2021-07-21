@@ -255,6 +255,8 @@ components:
       description: ''
       examples: []
       properties:
+        cardId:
+          type: string
         serialNumber:
           type: string
           description: Unique identifier for the given user.
