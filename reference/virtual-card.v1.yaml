@@ -137,7 +137,7 @@ paths:
               type: object
               properties:
                 templateId:
-                  type: string
+                  type: integer
   '/api/portal/virtualCard/v1/tenants/{tenant}/users/{upn}/cards/{cardId}/certificates/import':
     post:
       summary: Import certificate
