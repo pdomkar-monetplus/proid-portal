@@ -164,6 +164,9 @@ paths:
               properties:
                 rawData:
                   type: string
+                password:
+                  type: string
+                  description: base64 encoded
     parameters:
       - schema:
           type: string
