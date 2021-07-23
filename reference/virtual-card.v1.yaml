@@ -209,7 +209,7 @@ paths:
         in: path
         required: true
     get:
-      summary: ''
+      summary: Export certificate
       operationId: get-api-portal-virtualCard-v1-tenants-tenant-users-upn-cards-cardId-certificates-certificateId-export
       responses:
         '200':
@@ -223,6 +223,10 @@ paths:
               schema:
                 type: string
               description: application/pkix-cert
+            Content-Disposition:
+              schema:
+                type: string
+              description: filename="filename.cer"
   '/api/portal/virtualCard/v1/tenants/{tenant}/users/{upn}/cards/{cardId}/certificates/{certificateId}':
     delete:
       summary: Delete certificate
