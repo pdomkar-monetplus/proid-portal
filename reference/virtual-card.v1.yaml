@@ -167,6 +167,9 @@ paths:
                 password:
                   type: string
                   description: base64 encoded
+              required:
+                - rawData
+                - password
     parameters:
       - schema:
           type: string
