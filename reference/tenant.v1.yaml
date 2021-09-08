@@ -1,0 +1,178 @@
+openapi: 3.1.0
+info:
+  title: Tenant
+  version: '1.0'
+  summary: Portal Backend REST API for virtual-card module
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/api/portal/users/v1/tenats/{tenant}/search':
+    parameters:
+      - schema:
+          type: string
+        name: tenant
+        in: path
+        required: true
+    post:
+      summary: Search users
+      operationId: post-api-portal-virtualCard-v1-tenants-tenant-users-upn-cards
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: ../models/jsend/successResponse.v1.yaml
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          users:
+                            $ref: '#/components/schemas/UserSearch'
+                          totalResults:
+                            type: number
+        '':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  '':
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                upn:
+                  type: string
+                maxResults:
+                  type: number
+              required:
+                - upn
+components:
+  schemas:
+    VirtualCardInfo:
+      title: VirtualCardInfo
+      type: object
+      description: ''
+      examples: []
+      properties:
+        cardId:
+          type: string
+        serialNumber:
+          type: string
+          description: Unique identifier for the given user.
+        validFrom:
+          type: string
+        validTo:
+          type: string
+        certificates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Certificate'
+      required:
+        - cardId
+        - serialNumber
+        - validFrom
+        - validTo
+        - certificates
+    UserSearch:
+      title: UserSearch
+      type: object
+      description: ''
+      examples: []
+      properties:
+        upn:
+          type: string
+        displayName:
+          type: string
+          description: Unique identifier for the given user.
+        email:
+          type: string
+        employeeNumber:
+          type: number
+      required:
+        - upn
+        - displayName
+        - email
+        - employeeNumber
+    Certificate:
+      title: Certificate
+      type: object
+      properties:
+        certificateId:
+          type: string
+        serialNumber:
+          type: string
+        templateId?:
+          type:
+            - 'null'
+            - string
+        notBefore:
+          type: string
+          description: ISO 8601 formát?
+        notAfter:
+          type: string
+          description: ISO 8601 formát?
+        state:
+          type: string
+          enum:
+            - valid
+            - invalid
+        issuer:
+          type: string
+        subject:
+          type: string
+        keyUsage:
+          type: array
+          items:
+            type: string
+        alternativeNames:
+          type: array
+          items:
+            type: string
+        hash:
+          type: string
+        rawData:
+          type: string
+          description: Pole bytu pro export certifikátu
+      required:
+        - certificateId
+        - serialNumber
+        - templateId?
+        - notBefore
+        - notAfter
+        - state
+        - issuer
+        - subject
+        - keyUsage
+        - alternativeNames
+        - hash
+        - rawData
+    Template:
+      title: TemplateResponse
+      type: object
+      properties:
+        templateId:
+          type: string
+        name:
+          type: string
+        icon:
+          type: string
+        autorenew:
+          type: boolean
+          description: auto obnova
+        autoenroll:
+          type: boolean
+          description: |
+            Vygenerovat se zalozením karty
+      required:
+        - templateId
+        - name
+        - icon
+        - autorenew
+        - autoenroll
