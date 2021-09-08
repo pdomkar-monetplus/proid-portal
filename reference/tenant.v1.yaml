@@ -2,7 +2,8 @@ openapi: 3.1.0
 info:
   title: Tenant
   version: '1.0'
-  summary: Portal Backend REST API for virtual-card module
+  summary: Portal Backend REST API for tenant portal
+  description: ''
 servers:
   - url: 'http://localhost:3000'
 paths:
@@ -33,6 +34,9 @@ paths:
                             $ref: '#/components/schemas/UserSearch'
                           totalResults:
                             type: number
+                        required:
+                          - users
+                          - totalResults
         '':
           content:
             application/json:
