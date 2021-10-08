@@ -99,11 +99,25 @@ components:
           type: string
         employeeNumber:
           type: number
+        permissions:
+          type: array
+          items:
+            type: string
+            enum:
+              - USER_PORTAL
+              - USER_PORTAL_MOBILE
+              - USER_PORTAL_VIRTUAL_CARD
+              - USER_PORTAL_CMS
+              - TENANT_PORTAL
+              - TENANT_PORTAL_USER_MANAGEMENT
+              - TENANT_PORTAL_TENANT_SETTINGS
+              - TENANT_PORTAL_FEDERATED_APPLICATIONS
       required:
         - upn
         - displayName
         - email
         - employeeNumber
+        - permissions
     Certificate:
       title: Certificate
       type: object
